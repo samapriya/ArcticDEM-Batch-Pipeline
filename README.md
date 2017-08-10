@@ -1,4 +1,6 @@
 # ArcticDEM Batch Download & Processing Tools
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.841299.svg)](https://doi.org/10.5281/zenodo.841299)
+
 
 ArcticDEM project was a joint project supported by both the National Geospatial-Intelligence Agency(NGA) and the National Science Foundation(NSF) with the idea of creating a high resolution and high quality digital surface model(DSM). The product is distributed free of cost as time-dependent DEM strips and is hosted as https links that a user can use to download each strip. As per their policy
 
