@@ -93,7 +93,9 @@ optional arguments:
 ```
 
 ## Subset to AOI
-The script clips the master ArcticDEM strip file to a smaller subset usgin an area of interest shapefile. This allows to get the strip DEM(s) for only the area of interest and to use that to download these files. The subset allows the user to limit the total amount of strips to be downloaded and processed. The script will create a new shapefile with the clipped subset of the master ArcticDEM strip file.
+The script clips the master ArcticDEM strip file to a smaller subset usgin an area of interest shapefile. This allows to get the strip DEM(s) for only the area of interest and to use that to download these files. The subset allows the user to limit the total amount of strips to be downloaded and processed. The script will create a new shapefile with the clipped subset of the master ArcticDEM strip file. 
+
+**Make sure you reproject your aoi shapefile to the same projection as the ArcticDEM strip file** 
 
 ```
 usage: arcticdem.py demaoi [-h] [--source SOURCE] [--target TARGET]
