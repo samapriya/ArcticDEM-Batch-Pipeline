@@ -195,3 +195,11 @@ An example setup would be
 ```
 arcticdem demmeta --folder "C:\users\ArcticDEM\Extract\pgcmeta" --metadata "C:\users\arcticdem_metadata.csv" --error "C:\users\arcticdem_errorlog.csv"
 ```
+
+# Changelog
+
+## [0.1.1] - 2017-08-12
+### Added
+- Can now handle ogr input and includes instruction to project aoi in same projection as DEM strip.
+- Added the capability of skipping over already downloaded files and continues with left over downloads.
+- Completed recompiling executable to include changes.
