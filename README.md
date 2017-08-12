@@ -1,5 +1,5 @@
 # ArcticDEM Batch Download & Processing Tools
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.841299.svg)](https://doi.org/10.5281/zenodo.841299)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.842056.svg)](https://doi.org/10.5281/zenodo.842056)
 [![PGC](https://img.shields.io/badge/PGC-BootCamp%202017-green.svg)](https://www.pgc.umn.edu/)
 
 
