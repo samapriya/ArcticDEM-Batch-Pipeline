@@ -13,7 +13,7 @@ from os.path import expanduser
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 def demaoi_from_parser(args):
-    pgcaoi(source=args.source,target=args.aoi,output=args.clipped)
+    demaoi(source=args.source,target=args.target,output=args.output)
 def demsize_from_parser(args):
     demsize(path=args.path,infile=args.infile)
 def demdownload_from_parser(args):
