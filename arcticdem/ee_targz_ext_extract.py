@@ -34,13 +34,13 @@ def demextract(directory=None,destination=None,delete=None):
             tar = tarfile.open(filepath,'r:*')
             tar.extractall(destination)
             tar.close()
-            print "Extracted in Current Directory"
+            print("Extracted in Current Directory")
         elif (filepath.endswith("tar")):
             tar=tarfile.open(filepath,'r:*')
             tar.extractall(destination)
             tar.close()
         else:
-            print "Not a tar.gz file: '%s '"
+            print("Not a tar.gz file: '%s '")
     jp= [y for x in os.walk(destination) for y in glob(os.path.join(x[0], '*.tif'))]
     mf= [y for x in os.walk(destination) for y in glob(os.path.join(x[0], '*.txt'))]
     for mfd in mf:

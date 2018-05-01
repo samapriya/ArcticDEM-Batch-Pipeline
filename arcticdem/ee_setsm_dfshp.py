@@ -14,10 +14,11 @@ def demdownload(infile=None,destination=None):
             if not os.path.exists(fpath):
                 url=reader
                 dest=destination
-                obj=SmartDL(url,dest)
+                obj=SmartDL(url,dest, threads=3)
                 obj.start()
                 path=obj.get_dest()
             else:
-                print("Skipping...."+str(fname), end='\r')
+                print('Skipping....' + str(fname))
+                # print("Skipping...."+str(fname), end='\r')
         print("Download Completed")
             

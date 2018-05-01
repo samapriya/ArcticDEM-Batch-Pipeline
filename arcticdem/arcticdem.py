@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-import argparse,logging,os
+import argparse,logging,os,sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import subprocess,getpass,csv,re
 import time,shutil,glob
 from ee_setsm_clip2aoi import demaoi
@@ -11,7 +12,7 @@ from ee_setsm_meta2file import demmeta
 
 from os.path import expanduser
 
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
+# os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 def demaoi_from_parser(args):
     demaoi(source=args.source,target=args.target,output=args.output)
@@ -46,7 +47,7 @@ def main(args=None):
 
     parser_demdownload=subparsers.add_parser('demdownload',help='Allows users to batch download ArcticDEM Strips using aoi shapefile')
     parser_demdownload.add_argument('--subset', help='Choose the location of the output shapefile based on your AOI[You got this from demaoi tool]')
-    parser_demdownload.add_argument('--desination', help='Choose the destination where you want to download your files')
+    parser_demdownload.add_argument('--destination', help='Choose the destination where you want to download your files')
     parser_demdownload.set_defaults(func=demdownload_from_parser)
 
     parser_demextract=subparsers.add_parser('demextract',help='Allows users to extract both image and metadata files from the zipped tar files')
