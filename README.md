@@ -144,7 +144,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --subset SUBSET       Choose the location of the output shapefile based on
                         your AOI[You got this from demaoi tool]
-  --desination DESINATION
+  --destination DESINATION
                         Choose the destination where you want to download your
                         files
 ```
@@ -197,6 +197,8 @@ arcticdem demmeta --folder "C:\users\ArcticDEM\Extract\pgcmeta" --metadata "C:\u
 ```
 
 ## Changelog
+### [0.1.2] - 2018-05-03
+- Python 3 and linux compatibility
 
 ### [0.1.1] - 2017-08-12
 ### Added
