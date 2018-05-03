@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='arcticdem',
-    version='0.1.1',
+    version='0.1.2',
     packages=find_packages(),
     package_data={'arcticdem':['*.*']},
     url='https://github.com/samapriya/ArcticDEM-Batch-Pipeline',
