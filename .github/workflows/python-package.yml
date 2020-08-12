@@ -33,4 +33,4 @@ jobs:
     - name: Test package
       run: |
         python setup.py install
-        arctic -h
+        arcticdem -h
