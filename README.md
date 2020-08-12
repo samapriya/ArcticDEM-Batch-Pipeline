@@ -27,7 +27,7 @@ With this in mind and with the potential applications of using these toolsets th
 * [Installation](#installation)
 * [Getting started](#getting-started)
 * [Usage examples](#usage-examples)
-	* [Subset to AOI](#subset-to-aoi)
+    * [ArcticDEM init](#subset-to-aoi)
     * [Estimate Download Size](#estimate-download-size)
     * [Download DEM](#download-dem)
     * [Extract DEM](#extract-dem)
