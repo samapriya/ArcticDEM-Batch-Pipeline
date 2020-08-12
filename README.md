@@ -21,7 +21,7 @@ Based on their acknowledgements requests you can use
 You can find details on the background, scope and methods among other details [here](https://www.pgc.umn.edu/guides/arcticdem/introduction-to-arcticdem/?print=pdf)
 A detailed acknowledgement link can be found [here](https://www.pgc.umn.edu/guides/user-services/acknowledgement-policy/)
 
-With this in mind and with the potential applications of using these toolsets there was a need to batch download the DEM files for your area of interest and to be able to extract, clean and process metadata. In all fairness this tool has a motive of extending this as an input to Google Earth Engine and hence the last tool which is the metadata parser is designed to create a metadata manifest in a csv file which GEE can understand and associate during asset upload. 
+With this in mind and with the potential applications of using these toolsets there was a need to batch download the DEM files for your area of interest and to be able to extract, clean and process metadata. In all fairness this tool has a motive of extending this as an input to Google Earth Engine and hence the last tool which is the metadata parser is designed to create a metadata manifest in a csv file which GEE can understand and associate during asset upload.
 
 ## Table of contents
 * [Installation](#installation)
@@ -31,7 +31,6 @@ With this in mind and with the potential applications of using these toolsets th
     * [Estimate Download Size](#estimate-download-size)
     * [Download DEM](#download-dem)
     * [Extract DEM](#extract-dem)
-    * [Metadata Parsing for GEE](#metadata-parsing-for-gee)
 
 ## Installation
 We assume that you have installed the requirements files to install all the necessary packages and libraries required to use this tool. To install packages from the requirements.txt file you can simply use
@@ -65,37 +64,30 @@ sudo python setup.py develop or sudo python setup.py install
 ```
 
 ## Getting started
-To obtain help for a specific functionality, simply call it with _help_
-switch, e.g.: `arcticdem demextract -h`. If you didn't install arcticdem, then you
-can run it just by going to _arcticdem-cli_ directory and running `python
-arcticdem.py [arguments go here]`
+To obtain help for a specific functionality, simply call it with _help_ switch, e.g.: `arcticdem unpacker -h`. 
 
 As usual, to print help  `arcticdem -h`:
 ```
-ArcticDEM Batch Download & Processing Tools
+usage: arcticdem [-h] {init,extract,size,download,unpacker} ...
+
+ArcticDEM Simple Command Line Interface
+
 positional arguments:
-  { ,demaoi,demsize,demdownload,demextract,demmeta}
-                        ---------------------------------------
-                        -----Choose from ArcticDEM-Download Tools Below-----
-                        ---------------------------------------
-    demaoi              Allows user to subset Master ArcticDEM to their AOI
-    demsize             Allows users to estimate total download size and space
-                        left in your destination folder
-    demdownload         Allows users to batch download ArcticDEM Strips using
-                        aoi shapefile
-    demextract          Allows users to extract both image and metadata files
-                        from the zipped tar files
-    demmeta             Tool to process metadata files into CSV for all
-                        strips[For use with Google Earth Engine]
+  {init,extract,size,download,unpacker}
+    init                Get Strip and Tile Shapefiles and setup from ArcticDEM
+    extract             Extract AOI based File URL list
+    size                Generate estimated download size of DEM files for AOI
+    download            Download DEM files for AOI
+    unpacker            Unpack downloaded tar.gz DEM files
 
 optional arguments:
   -h, --help            show this help message and exit
 ```
 
 ## Subset to AOI
-The script clips the master ArcticDEM strip file to a smaller subset usgin an area of interest shapefile. This allows to get the strip DEM(s) for only the area of interest and to use that to download these files. The subset allows the user to limit the total amount of strips to be downloaded and processed. The script will create a new shapefile with the clipped subset of the master ArcticDEM strip file. 
+The script clips the master ArcticDEM strip file to a smaller subset usgin an area of interest shapefile. This allows to get the strip DEM(s) for only the area of interest and to use that to download these files. The subset allows the user to limit the total amount of strips to be downloaded and processed. The script will create a new shapefile with the clipped subset of the master ArcticDEM strip file.
 
-**Make sure you reproject your aoi shapefile to the same projection as the ArcticDEM strip file** 
+**Make sure you reproject your aoi shapefile to the same projection as the ArcticDEM strip file**
 
 ```
 usage: arcticdem.py demaoi [-h] [--source SOURCE] [--target TARGET]
@@ -152,9 +144,9 @@ An example setup would be
 ```
 arcticdem demdownload --subset "C:\users\master_aoi.shp" --destination "C:\users\ArcticDEM"
 ```
- 
+
 ## Extract DEM
-This downloaded DEM files are tar or tar gz files and need to be extracted. The important thing to note is that the script retains the dem file, the matchtag file and the metadata text files in separate directories within the destination directory. 
+This downloaded DEM files are tar or tar gz files and need to be extracted. The important thing to note is that the script retains the dem file, the matchtag file and the metadata text files in separate directories within the destination directory.
 
 ```
 usage: arcticdem.py demextract [-h] [--folder FOLDER]
