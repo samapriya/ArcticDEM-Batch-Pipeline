@@ -1,6 +1,8 @@
 # ArcticDEM Batch Download & Processing Tools
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1240456.svg)](https://doi.org/10.5281/zenodo.1240456)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3982064.svg)](https://doi.org/10.5281/zenodo.3982064)
+[![PyPI version](https://badge.fury.io/py/arcticdem.svg)](https://badge.fury.io/py/arcticdem)
 ![CI arcticdem](https://github.com/samapriya/ArcticDEM-Batch-Pipeline/workflows/CI%20arcticdem/badge.svg)
+[![Downloads](https://pepy.tech/badge/arcticdem/month)](https://pepy.tech/project/arcticdem/month)
 [![PGC](https://img.shields.io/badge/PGC-BootCamp%202017-green.svg)](https://www.pgc.umn.edu/)
 
 
@@ -22,7 +24,14 @@ Based on their acknowledgements requests you can use
 You can find details on the background, scope and methods among other details [here](https://www.pgc.umn.edu/guides/arcticdem/introduction-to-arcticdem/?print=pdf)
 A detailed acknowledgement link can be found [here](https://www.pgc.umn.edu/guides/user-services/acknowledgement-policy/)
 
-With this in mind and with the potential applications of using these toolsets there was a need to batch download the DEM files for your area of interest and to be able to extract, clean and process metadata. In all fairness this tool has a motive of extending this as an input to Google Earth Engine and hence the last tool which is the metadata parser is designed to create a metadata manifest in a csv file which GEE can understand and associate during asset upload.
+With this in mind and with the potential applications of using these toolsets there was a need to batch download the DEM files for your area of interest and to be able to extract, clean and process metadata. 
+
+Cite as:
+
+```
+Samapriya Roy. (2020, August 13). samapriya/ArcticDEM-Batch-Pipeline: ArcticDEM-Batch-Pipeline (Version 0.2.0).
+Zenodo. http://doi.org/10.5281/zenodo.3982064
+```
 
 ## Table of contents
 * [Installation](#installation)
