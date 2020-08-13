@@ -25,24 +25,26 @@ def demsize(ftype, infile):
         "Go grab some coffee.....",
     ]  # adding something fun
     print("This might take sometime. {}".format(random.choice(choicelist)))
-    summation=[]
+    summation = []
     try:
-        if infile.endswith('.csv'):
-            with open(infile, 'r') as csvfile:
+        if infile.endswith(".csv"):
+            with open(infile, "r") as csvfile:
                 reader = csv.reader(csvfile)
-                ulist= [row[0] for row in reader]
-        elif infile.endswith('.shp') and ftype is not None:
-            ulist = selection(ftype,infile,extract_file=None)
-        elif infile.endswith('.shp') and ftype is None:
-            sys.exit('Pass an ftype: Strip or Tile')
-        print('Processing a total of {} objects in File URL list'.format(len(ulist)))
+                ulist = [row[0] for row in reader]
+        elif infile.endswith(".shp") and ftype is not None:
+            ulist = selection(ftype, infile, extract_file=None)
+        elif infile.endswith(".shp") and ftype is None:
+            sys.exit("Pass an ftype: Strip or Tile")
+        print("Processing a total of {} objects in File URL list".format(len(ulist)))
         for download_url in ulist:
             pool = PoolManager()
             response = pool.request("GET", download_url, preload_content=False)
             max_bytes = 1000000000000
             content_bytes = response.headers.get("Content-Length")
             summation.append(float(content_bytes))
-            print('Estimated Total Size: {}'.format(humansize(sum(summation))), end='\r')
+            print(
+                "Estimated Total Size: {}".format(humansize(sum(summation))), end="\r"
+            )
     except KeyError:
-        print('Could not check size')
-    print ('\n'+"Total Download Size: {}".format(humansize(sum(summation))))
+        print("Could not check size")
+    print("\n" + "Total Download Size: {}".format(humansize(sum(summation))))

@@ -23,69 +23,80 @@ import os
 import sys
 import time
 import argparse
+import pkg_resources
 import subprocess
 import csv
 import requests
 import platform
 from os.path import expanduser
+
 if str(platform.system().lower()) == "windows":
     # Get python runtime version
-    version =sys.version_info[0]
+    version = sys.version_info[0]
     try:
         import pipwin
-        if pipwin.__version__=='0.5.0':
+
+        if pipwin.__version__ == "0.5.0":
             pass
         else:
-            a=subprocess.call('{} -m pip install pipwin==0.5.0'.format(sys.executable), shell=True,stdout=subprocess.PIPE)
-            subprocess.call('pipwin refresh', shell=True)
-        '''Check if the pipwin cache is old: useful if you are upgrading porder on windows
+            a = subprocess.call(
+                "{} -m pip install pipwin==0.5.0".format(sys.executable),
+                shell=True,
+                stdout=subprocess.PIPE,
+            )
+            subprocess.call("pipwin refresh", shell=True)
+        """Check if the pipwin cache is old: useful if you are upgrading porder on windows
         [This section looks if the pipwin cache is older than two weeks]
-        '''
+        """
         home_dir = expanduser("~")
-        fullpath=os.path.join(home_dir, ".pipwin")
+        fullpath = os.path.join(home_dir, ".pipwin")
         file_mod_time = os.stat(fullpath).st_mtime
         if int((time.time() - file_mod_time) / 60) > 20160:
-            print('Refreshing your pipwin cache')
-            subprocess.call('pipwin refresh', shell=True)
+            print("Refreshing your pipwin cache")
+            subprocess.call("pipwin refresh", shell=True)
     except ImportError:
-        a=subprocess.call('{} -m pip install pipwin==0.5.0'.format(sys.executable), shell=True,stdout=subprocess.PIPE)
-        subprocess.call('pipwin refresh', shell=True)
+        a = subprocess.call(
+            "{} -m pip install pipwin==0.5.0".format(sys.executable),
+            shell=True,
+            stdout=subprocess.PIPE,
+        )
+        subprocess.call("pipwin refresh", shell=True)
     except Exception as e:
         print(e)
     try:
         import gdal
     except ImportError:
-        subprocess.call('pipwin install gdal', shell=True)
+        subprocess.call("pipwin install gdal", shell=True)
     except Exception as e:
         print(e)
     try:
         import pyproj
     except ImportError:
-        subprocess.call('pipwin install pyproj', shell=True)
+        subprocess.call("pipwin install pyproj", shell=True)
     except Exception as e:
         print(e)
     try:
         import shapely
     except ImportError:
-        subprocess.call('pipwin install shapely', shell=True)
+        subprocess.call("pipwin install shapely", shell=True)
     except Exception as e:
         print(e)
     try:
         import fiona
     except ImportError:
-        subprocess.call('pipwin install fiona', shell=True)
+        subprocess.call("pipwin install fiona", shell=True)
     except Exception as e:
         print(e)
     try:
         import geopandas
     except ImportError:
-        subprocess.call('pipwin install geopandas', shell=True)
+        subprocess.call("pipwin install geopandas", shell=True)
     except Exception as e:
         print(e)
     try:
         import rtree
     except ImportError:
-        subprocess.call('pipwin install rtree', shell=True)
+        subprocess.call("pipwin install rtree", shell=True)
     except Exception as e:
         print(e)
 from bs4 import BeautifulSoup
@@ -94,6 +105,7 @@ from .arcticdem_extract import selection
 from .arcticdem_size import demsize
 from .arcticdem_download import download
 from .arcticdem_async_unpack import unpacker
+
 lpath = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(lpath)
 
@@ -113,8 +125,8 @@ def arcticdem_version():
             + "========================================================================="
         )
         print(
-            "Current version of articdem is {} upgrade to lastest version: {}".format(
-                pkg_resources.get_distribution("geeadd").version,
+            "Current version of arcticdem is {} upgrade to lastest version: {}".format(
+                pkg_resources.get_distribution("arcticdem").version,
                 company.string.strip().split(" ")[-1],
             )
         )
@@ -123,22 +135,28 @@ def arcticdem_version():
         )
 
 
-#arcticdem_version()
+arcticdem_version()
+
 
 def init_from_parser(args):
     search_index()
 
+
 def extract_from_parser(args):
-    selection(ftype=args.ftype, final=args.aoi,extract_file=args.outfile)
+    selection(ftype=args.ftype, final=args.aoi, extract_file=args.outfile)
+
 
 def size_from_parser(args):
     demsize(ftype=args.ftype, infile=args.infile)
 
+
 def download_from_parser(args):
-    download(ftype=args.ftype, infile=args.infile,path=args.path)
+    download(ftype=args.ftype, infile=args.infile, path=args.path)
+
 
 def unpacker_from_parser(args):
     unpacker(folder=args.input, final=args.output)
+
 
 def main(args=None):
     parser = argparse.ArgumentParser(
@@ -146,35 +164,63 @@ def main(args=None):
     )
     subparsers = parser.add_subparsers()
 
-    parser_init = subparsers.add_parser("init", help="Get Strip and Tile Shapefiles and setup from ArcticDEM")
+    parser_init = subparsers.add_parser(
+        "init", help="Get Strip and Tile Shapefiles and setup from ArcticDEM"
+    )
     parser_init.set_defaults(func=init_from_parser)
 
-    parser_extract = subparsers.add_parser("extract", help="Extract AOI based File URL list")
+    parser_extract = subparsers.add_parser(
+        "extract", help="Extract AOI based File URL list"
+    )
     required_named = parser_extract.add_argument_group("Required named arguments.")
-    required_named.add_argument("--ftype",help="Search type: Tile or Strip",required=True)
-    required_named.add_argument("--aoi",help="Input shapefile of AOI",required=True)
-    required_named.add_argument("--outfile",help="Full path to extracted CSV file",required=True)
+    required_named.add_argument(
+        "--ftype", help="Search type: Tile or Strip", required=True
+    )
+    required_named.add_argument("--aoi", help="Input shapefile of AOI", required=True)
+    required_named.add_argument(
+        "--outfile", help="Full path to extracted CSV file", required=True
+    )
     parser_extract.set_defaults(func=extract_from_parser)
 
-    parser_size = subparsers.add_parser("size", help="Generate estimated download size of DEM files for AOI")
+    parser_size = subparsers.add_parser(
+        "size", help="Generate estimated download size of DEM files for AOI"
+    )
     required_named = parser_size.add_argument_group("Required named arguments.")
-    required_named.add_argument("--infile",help="Input shapefile of AOI or extracted CSV file",required=True)
+    required_named.add_argument(
+        "--infile", help="Input shapefile of AOI or extracted CSV file", required=True
+    )
     optional_named = parser_size.add_argument_group("Optional named arguments")
-    optional_named.add_argument("--ftype",help="Search type: Tile or Strip", default=None)
+    optional_named.add_argument(
+        "--ftype", help="Search type: Tile or Strip", default=None
+    )
     parser_size.set_defaults(func=size_from_parser)
 
-    parser_download = subparsers.add_parser("download", help="Download DEM files for AOI")
+    parser_download = subparsers.add_parser(
+        "download", help="Download DEM files for AOI"
+    )
     required_named = parser_download.add_argument_group("Required named arguments.")
-    required_named.add_argument("--infile",help="Input shapefile of AOI or extracted CSV file",required=True)
-    required_named.add_argument("--path",help="Output folder to save files",required=True)
+    required_named.add_argument(
+        "--infile", help="Input shapefile of AOI or extracted CSV file", required=True
+    )
+    required_named.add_argument(
+        "--path", help="Output folder to save files", required=True
+    )
     optional_named = parser_download.add_argument_group("Optional named arguments")
-    optional_named.add_argument("--ftype",help="Search type: Tile or Strip", default=None)
+    optional_named.add_argument(
+        "--ftype", help="Search type: Tile or Strip", default=None
+    )
     parser_download.set_defaults(func=download_from_parser)
 
-    parser_unpacker = subparsers.add_parser("unpacker", help="Unpack downloaded tar.gz DEM files")
+    parser_unpacker = subparsers.add_parser(
+        "unpacker", help="Unpack downloaded tar.gz DEM files"
+    )
     required_named = parser_unpacker.add_argument_group("Required named arguments.")
-    required_named.add_argument("--input",help="Input folder with downloaded tar.gz files",required=True)
-    required_named.add_argument("--output",help="Output folder where files are unzipped",required=True)
+    required_named.add_argument(
+        "--input", help="Input folder with downloaded tar.gz files", required=True
+    )
+    required_named.add_argument(
+        "--output", help="Output folder where files are unzipped", required=True
+    )
     parser_unpacker.set_defaults(func=unpacker_from_parser)
 
     args = parser.parse_args()

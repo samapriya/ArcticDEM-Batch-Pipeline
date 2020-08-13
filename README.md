@@ -26,12 +26,14 @@ With this in mind and with the potential applications of using these toolsets th
 
 ## Table of contents
 * [Installation](#installation)
+* [Windows Setup](#windows-setup)
 * [Getting started](#getting-started)
 * [Usage examples](#usage-examples)
     * [ArcticDEM init](#subset-to-aoi)
-    * [Estimate Download Size](#estimate-download-size)
-    * [Download DEM](#download-dem)
-    * [Extract DEM](#extract-dem)
+    * [ArcticDEM extract](#arcticdem-extract)
+    * [ArcticDEM size](#arcticdem-size)
+    * [ArcticDEM download](#arcticdem-download)
+    * [ArcticDEM unpacker](#arcticdem-unpacker)
 
 ## Installation
 We assume that you have installed the requirements files to install all the necessary packages and libraries required to use this tool. To install packages from the requirements.txt file you can simply use
@@ -64,8 +66,79 @@ In a linux distribution
 sudo python setup.py develop or sudo python setup.py install
 ```
 
+## Windows Setup
+Shapely and a few other libraries are notoriously difficult to install on windows machines so follow the steps mentioned here **before installing arcticdem**. You can download and install shapely and other libraries from the [Unofficial Wheel files from here](https://www.lfd.uci.edu/~gohlke/pythonlibs) download depending on the python version you have. **Do this only once you have install GDAL**. I would recommend the steps mentioned above to get the GDAL properly installed. However I am including instructions to using a precompiled version of GDAL similar to the other libraries on windows. You can test to see if you have gdal by simply running
+
+```gdalinfo```
+
+in your command prompt. If you get a read out and not an error message you are good to go. If you don't have gdal try Option 1,2 or 3 in that order and that will install gdal along with the other libraries
+
+#### Option 1:
+Starting from arcticdem v0.2.0 onwards:
+
+Simply run ```arcticdem -h``` after installation. This should go fetch the extra libraries you need and install them. Once installation is complete, the arcticdem help page will show up. This should save you from the few steps below.
+
+#### Option 2:
+If this does not work or you get an unexpected error try the following commands. You can also use these commands if you simply want to update these libraries.
+
+```
+pipwin refresh
+pipwin install gdal
+pipwin install pyproj
+pipwin install shapely
+pipwin install fiona
+pipwin install geopandas
+pipwin install rtree
+```
+
+#### Option 3
+For windows first thing you need to figure out is your Python version and whether it is 32 bit or 64 bit. You can do this by going to your command prompt and typing python.
+
+![windows_cmd_python](https://user-images.githubusercontent.com/6677629/63856293-3dfc2b80-c96f-11e9-978d-d2c1a01cfe36.PNG)
+
+For my windows machine, I have both 32-bit python 2.7.16 and 64-bit Python 3.6.6. You can get the python version at the beginning of the highlighted lines and the 32 or 64 bit within the Intel or AMD64 within the square brackets. Your default python is the one you get by just typing python in the command line. Then download the following packages based on the information we collect about our python type in the earlier step. We use unofficial binaries to install these. This step is only needed if you are on a windows machine if you are using a setup manager like anaconda you **might** be able to avoid this setup completely
+
+At this stage **if you were unable to install gdal then download the gdal binaries first**, install that before everything else
+
+gdal: [https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal](https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal)
+
+Then follow along the following libraries
+* pyproj: [https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyproj](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyproj)
+* shapely: [https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely](https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
+* fiona: [https://www.lfd.uci.edu/~gohlke/pythonlibs/#fiona](https://www.lfd.uci.edu/~gohlke/pythonlibs/#fiona)
+* geopandas: [https://www.lfd.uci.edu/~gohlke/pythonlibs/#geopandas](https://www.lfd.uci.edu/~gohlke/pythonlibs/#geopandas)
+* rtree: [https://www.lfd.uci.edu/~gohlke/pythonlibs/#rtree](https://www.lfd.uci.edu/~gohlke/pythonlibs/#rtree)
+
+To choose the version that is correct for you use the python information you collected earlier
+For example for my python 3.6.6 and AMD 64 if I was installing shapely I would choose the following, here 36 means python 3.6 and amd64 refers to the 64bit we were talking about.
+
+```Shapely‑1.6.4.post2‑cp36‑cp36m‑win_amd64.whl```
+
+You will get a wheel file or a file ending with .whl. You can now simply browse to the folder or migrate to it in your command prompt. Once there if I am installing for my python 3.6 the command was. At this point we will make use of our trusted package installer that comes with python called pip. Note the choice of pip or pip3 depends on your python version usually you can get the pip to use with your python by typing
+
+
+```pip3 -V```
+
+you get a readout like this
+
+```pip 18.1 from c:\python3\lib\site-packages\pip (python 3.6)```
+
+if you have pip just replace that with ```pip -V```
+
+Then simply install the wheel files you downloaded using the following setup
+
+```
+pip3 install full path to Shapely‑1.6.4.post2‑cp36‑cp36m‑win_amd64.whl
+
+in my case that would be
+
+pip3 install "C:\Users\samapriya\Downloads\Shapely‑1.6.4.post2‑cp36‑cp36m‑win_amd64.whl"
+```
+
+Or you can use [anaconda to install](https://conda-forge.github.io/). Again, both of these options are mentioned on [Shapely’s Official PyPI page](https://pypi.org/project/Shapely/).
+
 ## Getting started
-To obtain help for a specific functionality, simply call it with _help_ switch, e.g.: `arcticdem unpacker -h`. 
+To obtain help for a specific functionality, simply call it with _help_ switch, e.g.: `arcticdem unpacker -h`.
 
 As usual, to print help  `arcticdem -h`:
 ```
@@ -85,111 +158,133 @@ optional arguments:
   -h, --help            show this help message and exit
 ```
 
-## Subset to AOI
-The script clips the master ArcticDEM strip file to a smaller subset usgin an area of interest shapefile. This allows to get the strip DEM(s) for only the area of interest and to use that to download these files. The subset allows the user to limit the total amount of strips to be downloaded and processed. The script will create a new shapefile with the clipped subset of the master ArcticDEM strip file.
-
-**Make sure you reproject your aoi shapefile to the same projection as the ArcticDEM strip file**
+## ArcticDEM init
+This tool fetches the index files for both ArcticDEM Strip and Tile and makes sure you have the most updated copy of the index shapefiles as provided by the Polar Geospatial Center. Since the most relevant columns are the geometry and the file URL column these are the only two that are retained and this allows for the index files to be read into geopandas much quicker and for performing faster overlay analysis. This tool takes no arguments.
 
 ```
-usage: arcticdem.py demaoi [-h] [--source SOURCE] [--target TARGET]
-                           [--output OUTPUT]
+usage: arcticdem init [-h]
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --source SOURCE  Choose location of your AOI shapefile
-  --target TARGET  Choose the location of the master ArcticDEM strip file
-  --output OUTPUT  Choose the location of the output shapefile based on your
-                   AOI
+  -h, --help  show this help message and exit
 ```
 An example setup would be
 ```
-arcticdem demaoi --source "C:\users\aoi.shp" --target "C:\users\masterdem.shp" --output "C:\users\master_aoi.shp"
+arcticdem init
 ```
 
-### Estimate Download Size
-One of the most common things you want to do is to know if the destination where you want to save these files has enough space before you begin the download process. This script allows you to query the total download size for your area of interest and the destination drive where you want to save the compressed files. It also recursively updates overall download size on the screen and print total size needed along with total download size in GB.
+### ArcticDEM extract
+While this tool is optional it speeds up your download process because it creates a subset CSV containing the download URLs provided your AOI as a shapefile for now. The tool tries to auto reproject your shapefile so they are in the same projection system. The argument allows you to pass whether you want to use Tiles or Strips to create the extract and the full path to the extracted CSV file with file URLs to be written out.
 
 ```
-usage: arcticdem.py demsize [-h] [--infile INFILE] [--path PATH]
+arcticdem extract -h
+usage: arcticdem extract [-h] --ftype FTYPE --aoi AOI --outfile OUTFILE
+
+optional arguments:
+  -h, --help         show this help message and exit
+
+Required named arguments.:
+  --ftype FTYPE      Search type: Tile or Strip
+  --aoi AOI          Input shapefile of AOI
+  --outfile OUTFILE  Full path to extracted CSV file
+```
+
+An example setup would be
+```
+arcticdem extract --ftype Strip --aoi "full path to aoi.shp" --outfile "full path to extract.csv"
+```
+
+### ArcticDEM size
+One of the most common things you want to do is to know if the destination where you want to save these files has enough space before you begin the download process. This script allows you to query the total download size for your area of interest using either your AOI as shapefile or the extracted CSV file which you might have created earlier. If you use the shapefile as infile you have to provide index type while using the extracted CSV will be faster in returning results.
+
+```
+arcticdem size -h
+usage: arcticdem size [-h] --infile INFILE [--ftype FTYPE]
 
 optional arguments:
   -h, --help       show this help message and exit
-  --infile INFILE  Choose the clipped aoi file you clipped from demaoi
-                   tool[This is the subset of the master ArcticDEM Strip]
-  --path PATH      Choose the destination folder where you want your dem files
-                   to be saved[This checks available disk space]
+
+Required named arguments.:
+  --infile INFILE  Input shapefile of AOI or extracted CSV file
+
+Optional named arguments:
+  --ftype FTYPE    Search type: Tile or Strip
 ```
 An example setup would be
 ```
-arcticdem demsize --infile "C:\users\master_aoi.shp" --path "C:\users\ArcticDEM"
+arcticdem size --infile "full path to aoi.shp" --ftype Strip
+
+or
+
+arcticdem size --infile "full path to extract.csv"
 ```
+
 The program might misbehave if the area of interest is extremely large or be sluggish in nature.
 
 
-## Download DEM
-What we were mainly interested after we know that we have enough space to download is to download the files. The script used a multi part download library to download the files quicker and in a more managed style to the destination given by the user.
+## ArcticDEM download
+What we were mainly interested after we know that we have enough space to download is to download the files. The download takes into consideration that the server might reject too many calls and tries to download using the extracted CSV file or the AOI shapefile and the index type (Strip or Tile). As expected an output folder is also needed.
 
 ```
-usage: arcticdem.py demdownload [-h] [--subset SUBSET]
-                                [--desination DESINATION]
+arcticdem download -h
+usage: arcticdem download [-h] --infile INFILE --path PATH [--ftype FTYPE]
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --subset SUBSET       Choose the location of the output shapefile based on
-                        your AOI[You got this from demaoi tool]
-  --destination DESINATION
-                        Choose the destination where you want to download your
-                        files
+  -h, --help       show this help message and exit
+
+Required named arguments.:
+  --infile INFILE  Input shapefile of AOI or extracted CSV file
+  --path PATH      Output folder to save files
+
+Optional named arguments:
+  --ftype FTYPE    Search type: Tile or Strip
 ```
 An example setup would be
 ```
-arcticdem demdownload --subset "C:\users\master_aoi.shp" --destination "C:\users\ArcticDEM"
+arcticdem download --infile "Full path to aoi.shp" --path "Full folder path to download" --ftype Strip
+
+or
+
+arcticdem download --infile "Full path to extract.csv" --path "Full folder path to download"
 ```
 
-## Extract DEM
-This downloaded DEM files are tar or tar gz files and need to be extracted. The important thing to note is that the script retains the dem file, the matchtag file and the metadata text files in separate directories within the destination directory.
+## ArcticDEM unpacker
+This is a rapid async unzip tool that extracts and places the final files into predefined folders. In this case these are predefined for my purpose and creates the following folders
+
+* Index
+* matchtag
+* dem
+* mdf
+* browse
+
+  The script retains the file names and is designed to unpack these files faster. The choice of folder pertains to my need to parsing through the ArcticDEM strips and extracting files as I need them and can be modified to be a more general downloader to extract everything without sort.
 
 ```
-usage: arcticdem.py demextract [-h] [--folder FOLDER]
-                               [--destination DESTINATION] [--action ACTION]
+arcticdem unpacker -h
+usage: arcticdem unpacker [-h] --input INPUT --output OUTPUT
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --folder FOLDER       Choose the download file where you downloaded your tar
-                        zipped files
-  --destination DESTINATION
-                        Choose the destination folder where you want your
-                        images and metadata files to be extracted
-  --action ACTION       Choose if you want your zipped files to be deleted
-                        post extraction "yes"|"no"
+  -h, --help       show this help message and exit
+
+Required named arguments.:
+  --input INPUT    Input folder with downloaded tar.gz files
+  --output OUTPUT  Output folder where files are unzipped
 ```
 An example setup would be
 ```
-arcticdem demdextract --folder "C:\users\ArcticDEM" --destination "C:\users\ArcticDEM\Extract" --action "yes"
+arcticdem unpacker --input "Full path to input folder with tar.gz files" --output "Full path to folder with extracted files"
 ```
 
-## Metadata Parsing for GEE
-One of my key interest in working on the ArcticDEM parsing was to be able to upload this to Google Earth Engine(GEE). The metadata parser script allows you to parse all metadata into a combined csv file to be used to upload images to GEE. The manifest and upload tools are separate from this package tool and included in my gee_asset_manager_addon.
-
-```
-usage: arcticdem.py demmeta [-h] [--folder FOLDER] [--metadata METADATA]
-                            [--error ERROR]
-
-optional arguments:
-  -h, --help           show this help message and exit
-  --folder FOLDER      Choose where you unzipped and extracted your DEM and
-                       metadata files
-  --metadata METADATA  Choose a path to the metadata file "example:
-                       users/desktop/metadata.csv"
-  --error ERROR        Choose a path to the errorlog file "example:
-                       users/desktop/errorlog.csv"
-```
-An example setup would be
-```
-arcticdem demmeta --folder "C:\users\ArcticDEM\Extract\pgcmeta" --metadata "C:\users\arcticdem_metadata.csv" --error "C:\users\arcticdem_errorlog.csv"
-```
 
 ## Changelog
+
+### v0.2.0
+- Major overhaul of underlying program
+- Most functions have been rewritten and optimized to meet Python3 standards
+- Async unpacker has been included for faster extraction of files
+- Overall estimation of size tool as well as geometry functions have been Optimized
+- Auto installation of libraries for windows has been enabled using pipwin
+- Autochecks for updated version on PyPI and informs the user
+
 ### [0.1.2] - 2018-05-03
 - Python 3 and linux compatibility
 

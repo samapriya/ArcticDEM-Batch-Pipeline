@@ -5,8 +5,10 @@ import sys
 import csv
 from requests.packages.urllib3.poolmanager import PoolManager
 from geopandas import GeoDataFrame
+
 lpath = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(lpath)
+
 
 def clip_extent(gdf, poly):
     gdf_sub = gdf.iloc[gdf.sindex.query(poly, predicate="intersects")]
@@ -17,38 +19,42 @@ def clip_extent(gdf, poly):
         clipped = gdf_sub.intersection(poly)
     return clipped
 
-def selection(ftype,final,extract_file):
-    print('Now running spatial extract....')
+
+def selection(ftype, final, extract_file):
+    print("Now running spatial extract....")
     folder_name = "ArcticDEM-Index"
     pth = os.path.join(lpath, folder_name)
     if os.path.exists(pth):
         for files in os.listdir(pth):
-            if files.endswith('.shp') and ftype in files:
-                initial= os.path.join(pth,files)
+            if files.endswith(".shp") and ftype in files:
+                initial = os.path.join(pth, files)
     else:
-        sys.exit('Try acrticdem init')
+        sys.exit("Try acrticdem init")
 
     try:
         df = gpd.read_file(initial)
-        df2 = gpd.read_file(final,encoding='utf-8')
-        df2=df2.to_crs(df.crs)
+        df2 = gpd.read_file(final, encoding="utf-8")
+        df2 = df2.to_crs(df.crs)
         poly = df2.geometry.unary_union
-        geom_intersection = clip_extent(df,poly)
-        print('Number of rows that intersect AOI {}'.format(geom_intersection.shape[0]))
+        geom_intersection = clip_extent(df, poly)
+        print("Number of rows that intersect AOI {}".format(geom_intersection.shape[0]))
 
-        if int(geom_intersection.shape[0])>0:
-            url_list = geom_intersection['fileurl'].values.tolist()
+        if int(geom_intersection.shape[0]) > 0:
+            url_list = geom_intersection["fileurl"].values.tolist()
             if extract_file is not None:
-                writer=csv.writer(open(extract_file,'w'),lineterminator="\n")
+                writer = csv.writer(open(extract_file, "w"), lineterminator="\n")
                 for item in url_list:
-                    writer.writerow([item,])
+                    writer.writerow(
+                        [item,]
+                    )
         else:
-            print('No intersecting features found')
+            print("No intersecting features found")
         return url_list
     except Exception as e:
         print(e)
 
-#selection(ftype="Tile",final=r'C:\Users\samapriya\Downloads\arctic_small\POLYGON.shp',extract_file=r'C:\planet_demo\extract_tile.csv')
+
+# selection(ftype="Tile",final=r'C:\Users\samapriya\Downloads\arctic_small\POLYGON.shp',extract_file=r'C:\planet_demo\extract_tile.csv')
 
 # suffixes = ["B", "KB", "MB", "GB", "TB", "PB"]
 
